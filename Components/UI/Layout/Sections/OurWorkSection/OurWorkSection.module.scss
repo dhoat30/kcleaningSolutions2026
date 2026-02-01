@@ -1,0 +1,14 @@
+.section{ 
+      scroll-margin-top: 60px;
+padding-top: 40px; 
+padding-bottom: 40px;
+background-color: var(--light-surface-container-lowest);
+
+.gridWrapper{ 
+    display: grid; 
+    grid-template-columns: 1fr 1fr 1fr; 
+  
+    @media(max-width: 400px){ 
+    }
+}
+}
