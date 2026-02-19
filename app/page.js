@@ -78,7 +78,7 @@ export default async function Home() {
           servicesData={options.services}
           reviewerPics={reviewerPics}
         />
-        <GoogleReviewsCarousel data={googleReviews} className="mt-24" />
+        {/* <GoogleReviewsCarousel data={googleReviews} className="mt-24" /> */}
 
         {/* <USP showTitle={true} statsArray={options.stats.items} cards={options.usp.items} title={options.usp.section_title} description={options.usp.section_description} /> */}
       </main>

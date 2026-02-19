@@ -359,13 +359,13 @@ export default function Layout({
         />
       );
     }
-    if (
-      section.acf_fc_layout === "show_reviews" &&
-      section.show_reviews &&
-      googleReviewsData
-    ) {
-      return <GoogleReviewsCarousel key={index} data={googleReviewsData} />;
-    }
+    // if (
+    //   section.acf_fc_layout === "show_reviews" &&
+    //   section.show_reviews &&
+    //   googleReviewsData
+    // ) {
+    //   return <GoogleReviewsCarousel key={index} data={googleReviewsData} />;
+    // }
 
     if (section.acf_fc_layout === "show_usp_table") {
       return <UspTable key={index} uspTableData={uspTable} />;
