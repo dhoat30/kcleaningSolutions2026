@@ -5,12 +5,11 @@ import BeforeAfterMasonry from "../BeforeAfterSlider/BeforeAfterMasonry";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import styles from "./Gallery.module.scss";
-export default function Gallery({ galleryData }) {
+export default function Gallery({ galleryData, showBriefGallery = false }) {
   const [value, setValue] = React.useState(0);
   if (!galleryData) return null;
   // Extract unique tags for the tabs, and add a "Show All" option
   const uniqueTags = [
-    { value: "all", label: "All" },
     ...Array.from(
       new Set(galleryData.map((item) => item.tag.value)), // Get unique tag values
     ).map((tagValue) => {
@@ -23,12 +22,9 @@ export default function Gallery({ galleryData }) {
   };
 
   // Filter gallery items based on selected tab
-  const filteredGalleryData =
-    value === 0
-      ? galleryData // Show all items if "All" tab is selected
-      : galleryData.filter(
-          (item) => item.tag.value === uniqueTags[value].value,
-        );
+  const filteredGalleryData = galleryData.filter(
+    (item) => item.tag.value === uniqueTags[value].value,
+  );
 
   return (
     <section className={`${styles.section}`}>

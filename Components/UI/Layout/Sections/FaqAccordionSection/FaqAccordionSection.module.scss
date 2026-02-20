@@ -5,10 +5,16 @@
       padding: 40px 0;
     }
     .gridWrapper{ 
-      
-       
+       grid-template-columns: 500px 1fr;
+       @media(max-width: 1060px){ 
+        grid-template-columns: 1fr;
+        
+       }
         .titleWrapper { 
-           
+             @media(max-width: 1060px){ 
+        text-align: center;
+        
+       }
         }
     }
 }

@@ -42,7 +42,7 @@ export default function Layout({
   adsPackagesData,
 }) {
   if (!sections) return null;
-  console.log(reviewerPics);
+  console.log(sections);
   const sectionsJSX = sections.map((section, index) => {
     if (section.acf_fc_layout === "our_work") {
       return (
@@ -173,8 +173,8 @@ export default function Layout({
       return (
         <FaqAccordionSection
           key={index}
-          title={section.section_title}
-          description={section.section_description}
+          title={section.title}
+          description={section.description}
           qaData={section.items}
         />
       );
@@ -280,6 +280,9 @@ export default function Layout({
     }
     if (section.acf_fc_layout === "show_stats" && section.show_stats) {
       return <Stats key={index} statsData={statsData} />;
+    }
+    if (section.acf_fc_layout === "stats_section") {
+      return <Stats key={index} statsData={section.stats} />;
     }
     if (section.acf_fc_layout === "show_locations" && section.show_locations) {
       return (

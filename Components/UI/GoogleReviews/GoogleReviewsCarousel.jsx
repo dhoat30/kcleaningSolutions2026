@@ -55,7 +55,12 @@ export default function GoogleReviewsCarousel({ data }) {
 
   // filter review comment
   const filteredReviewData = data.reviews.filter((item) => {
-    return item.stars === 5 && typeof item.text === "string";
+    return (
+      item.stars === 5 &&
+      typeof item.text === "string" &&
+      item.text.length > 79 &&
+      item.name.length < 20
+    );
   });
 
   const testimonialCardsJSX = filteredReviewData.map((item, index) => {
@@ -72,7 +77,7 @@ export default function GoogleReviewsCarousel({ data }) {
   });
 
   return (
-    <section className={`${styles.section}`}>
+    <section className={`${styles.section}`} id="google-reviews">
       <Container maxWidth="xl" className={`${styles.container}`}>
         <div className={`${styles.titleRow}`}>
           <Typography

@@ -6,15 +6,15 @@ import styles from "./FaqAccordionSection.module.scss";
 function FaqAccordionSection({ title, description, qaData }) {
   if (!qaData) return null;
   return (
-    <section className={`${styles.section}`}>
-      <Container maxWidth="md">
-        <div className={`${styles.gridWrapper} `}>
+    <section className={`${styles.section} `} id="faq-section">
+      <Container maxWidth="lg">
+        <div className={`${styles.gridWrapper} grid gap-40`}>
           <div className={`${styles.titleWrapper}`}>
-            <Typography variant="h4" component="h2">
+            <Typography variant="h2" component="h2">
               {title}
             </Typography>
             <Typography
-              variant="body1"
+              variant="h6"
               component="p"
               className="description mt-16"
             >
@@ -29,4 +29,3 @@ function FaqAccordionSection({ title, description, qaData }) {
 }
 
 export default FaqAccordionSection;
-

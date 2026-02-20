@@ -21,7 +21,7 @@ export default function OurWorkSection({
             {title}
           </Typography>
           <Typography
-            variant="h5"
+            variant="h6"
             component="div"
             className="descripton mt-8"
             align="center"
@@ -30,7 +30,10 @@ export default function OurWorkSection({
           </Typography>
         </Container>
         <div className="gallery-wrapper">
-          <Gallery galleryData={beforeAfterGalleryArr} />
+          <Gallery
+            galleryData={beforeAfterGalleryArr}
+            showBriefGallery={true}
+          />
         </div>
       </Container>
     </section>

@@ -145,7 +145,7 @@ export const lightTheme = createTheme({
     h2: {
       fontWeight: 800,
       color: "var(--light-on-surface)",
-      lineHeight: 1,
+      lineHeight: 1.1,
       fontSize: "3.5rem",
       fontFamily: ["var(--font-manrope)", "Segoe UI", "sans-serif"].join(","),
       "@media (max-width:600px)": {
