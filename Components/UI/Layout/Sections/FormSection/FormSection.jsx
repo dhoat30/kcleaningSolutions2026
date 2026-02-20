@@ -7,9 +7,16 @@ import BeforeAfter from "../../../BeforeAfterSlider/BeforeAfter";
 import GetQuoteForm from "@/Components/UI/Forms/GetQuoteForm";
 import Video from "@/Components/UI/Video/Video";
 import styles from "./FormSection.module.scss";
-export default function FormSection({ title, description, usp, graphic }) {
+import GoogleReviewSnippet from "@/Components/UI/GoogleReviews/GoogleReviewCard/GoogleReviewSnippet";
+export default function FormSection({
+  title,
+  description,
+  usp,
+  graphic,
+  reviewerPics,
+}) {
   let graphicComponent = null;
-
+  console.log(reviewerPics);
   if (graphic.graphic_type === "image" && graphic.image) {
     const paddingBottom = (graphic.image.height / graphic.image.width) * 100;
     graphicComponent = (
@@ -64,12 +71,13 @@ export default function FormSection({ title, description, usp, graphic }) {
       <Container maxWidth="lg" className={`${styles.container}`}>
         <div className={`${styles.grid} grid gap-24`}>
           <div className={`${styles.contentWrapper} border-radius-12`}>
+            <GoogleReviewSnippet reviewerPics={reviewerPics} />
             <Typography component={"h1"} variant={"h3"} className="title">
               {title}
             </Typography>
             <Typography
               component={"div"}
-              variant={"body1"}
+              variant={"h6"}
               className="description mt-16"
             >
               {description}

@@ -1,7 +1,6 @@
 .section { 
     background:var(--light-surface-container-low);
-    border-top: 1px solid var(--light-outline-variant);
-    border-bottom: 1px solid var(--light-outline-variant);
+  
     padding: 40px 0;
     @media (max-width: 600px) {
       padding: 40px 0;
@@ -47,10 +46,10 @@
 
 
 .reviewWrapper {
-  background: var(--light-surface-container-high);
+  background: var(--light-surface-container-highest);
   border-radius: 50px;
   max-width: 324px;
-  margin: 0 auto;
+ 
   padding: 8px 8px; 
   @media(max-width: 365px){ 
     justify-content: center;

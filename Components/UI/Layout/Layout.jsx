@@ -42,7 +42,7 @@ export default function Layout({
   adsPackagesData,
 }) {
   if (!sections) return null;
-  console.log(sections[3]);
+  console.log(reviewerPics);
   const sectionsJSX = sections.map((section, index) => {
     if (section.acf_fc_layout === "our_work") {
       return (
@@ -188,6 +188,7 @@ export default function Layout({
           description={section.description}
           usp={{ text_usp: section.text_usp, image_usp: section.image_usp }}
           graphic={section.graphic}
+          reviewerPics={reviewerPics}
         />
       );
     }

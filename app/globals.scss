@@ -217,7 +217,9 @@ ul {
     padding-right: 16px;
   }
 }
-
+.full-width{ 
+  width: 100%; 
+}
 /* margin  */
 .mt-16 {
   margin-top: 16px;
@@ -998,21 +1000,6 @@ strong {
 
 }
 
-// mui slider icon 
-.hours-calculator-slider {
-  display: none;
-
-  .MuiSlider-thumb {
-    position: relative;
-
-    &::before {
-      content: url('data:image/svg+xml,<svg width="32" height="32" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="20.8831" cy="20.0537" r="19" stroke="%23005489" stroke-width="2"/><circle cx="20.8831" cy="20.0527" r="13" stroke="%23005489" stroke-width="2"/><circle cx="20.8831" cy="20.0527" r="7" stroke="%23005489" stroke-width="2"/></svg>');
-      position: absolute;
-      top: 2.3px;
-      left: 2px;
-    }
-  }
-}
 
 // footer contact label 
 .footer-contact-wrapper {

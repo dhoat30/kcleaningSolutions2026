@@ -176,7 +176,7 @@ export const lightTheme = createTheme({
     h6: {
       fontWeight: 400,
       lineHeight: "130%",
-      color: "var(--light-on-surface)",
+      color: "var(--light-on-surface-variant)",
     },
     body1: {
       color: "var( --light-on-surface-variant)",

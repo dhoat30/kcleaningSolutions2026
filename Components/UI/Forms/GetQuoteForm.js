@@ -15,6 +15,8 @@ import GoogleAutocomplete from "@/Components/GoogleMaps/GoogleAutoComplete";
 import styles from "./FormStyle.module.scss";
 import dayjs from "dayjs";
 import { useClickIds } from "@/hooks/useClickIds";
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
+
 export default function GetQuoteForm({
   className,
   formName = "Get a Quote Form",
@@ -355,10 +357,30 @@ export default function GetQuoteForm({
                 loading={isLoading}
                 // isSuccess={isSuccess}
                 variant="contained"
-                className="mt-16"
+                className="mt-16 full-width"
               >
                 Submit now
               </Button>
+              <Button
+                variant="text"
+                className="mt-8  align-center"
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+                href={`tel:${process.env.NEXT_PUBLIC_PHONE_NUMBER}`}
+                startIcon={<LocalPhoneIcon />}
+              >
+                Prefer to talk? {process.env.NEXT_PUBLIC_PHONE_NUMBER}
+              </Button>
+              <Typography
+                variant="body2"
+                component="div"
+                className="center-align"
+              >
+                Honest advice • Free Quote • No obligation
+              </Typography>
               {error && (
                 <Alert sx={{ margin: "8px 0" }} severity="error">
                   Something went wrong. Please Try again

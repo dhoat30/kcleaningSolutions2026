@@ -63,7 +63,8 @@ export default async function Home() {
   // const googleReviews = await getGoogleReviews()
   if (!data) return { notFound: true };
   const sections = data[0]?.acf?.layout;
-  const reviewerPics = options?.review_section_?.reviewer_pics;
+  const reviewerPics = data[0]?.acf?.reviews_pics;
+
   return (
     <>
       <Header />
