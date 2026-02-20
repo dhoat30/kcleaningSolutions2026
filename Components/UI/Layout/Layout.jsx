@@ -148,7 +148,9 @@ export default function Layout({
         />
       );
     }
-
+    if (section.acf_fc_layout === "show_reviews" && googleReviewsData) {
+      return <GoogleReviewsCarousel key={index} data={googleReviewsData} />;
+    }
     // if (section.acf_fc_layout === "tabs_section") {
     //   return    <GradientTabs   key={index}
     //   title={section.section_title}

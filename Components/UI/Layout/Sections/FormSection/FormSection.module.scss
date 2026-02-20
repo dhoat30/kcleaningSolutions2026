@@ -6,7 +6,7 @@ padding: 100px 0 16px 0;
 }
 .container{ 
   @media (max-width: 600px) {
-      padding:0; 
+      padding:0 16px; 
   }
   .grid{ 
     grid-template-columns: 1fr 500px;

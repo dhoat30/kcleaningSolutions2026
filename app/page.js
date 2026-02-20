@@ -10,6 +10,8 @@ import Footer from "@/Components/UI/Footer/Footer";
 import Layout from "@/Components/UI/Layout/Layout";
 
 import GoogleReviewsCarousel from "@/Components/UI/GoogleReviews/GoogleReviewsCarousel";
+import reviewsData from "@/data/google-reviews.json";
+
 export async function generateMetadata(props, parent) {
   // read route params
 
@@ -57,7 +59,6 @@ export default async function Home() {
   );
   // const googleReviews = await getGoogleReviews()
   const options = await getOptions();
-  const googleReviews = await getGoogleReviews();
 
   // const googleReviews = await getGoogleReviews()
   if (!data) return { notFound: true };
@@ -69,6 +70,7 @@ export default async function Home() {
       <main>
         <Layout
           // googleReviewsData={googleReviews}
+          googleReviewsData={reviewsData}
           uspTable={options.usp_table}
           sections={sections}
           uspData={options.usp}
