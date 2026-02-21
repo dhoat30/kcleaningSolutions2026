@@ -381,6 +381,7 @@ export default function GetQuoteForm({
               >
                 Honest advice • Free Quote • No obligation
               </Typography>
+
               {error && (
                 <Alert sx={{ margin: "8px 0" }} severity="error">
                   Something went wrong. Please Try again
