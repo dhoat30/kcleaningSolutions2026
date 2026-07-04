@@ -2,9 +2,10 @@
 
 import React, { useCallback, useMemo } from "react";
 import Container from "@mui/material/Container";
-import Link from "next/link";
+import Image from "next/image";
 import Button from "@mui/material/Button";
 import CallMadeOutlinedIcon from "@mui/icons-material/CallMadeOutlined";
+import StarIcon from "@mui/icons-material/Star";
 import GoogleReviewCard from "./GoogleReviewCard/GoogleReviewCard";
 import Typography from "@mui/material/Typography";
 import styles from "./GoogleReviewsCarousle.module.scss";
@@ -12,7 +13,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import AutoScroll from "embla-carousel-auto-scroll";
 
 export default function GoogleReviewsCarousel({ data }) {
-  if (!data && data.reviews.length === 0) return null;
+  if (!data || !data.reviews || data.reviews.length === 0) return null;
 
   // ✅ AutoScroll plugin
   const autoScroll = useMemo(
@@ -63,6 +64,16 @@ export default function GoogleReviewsCarousel({ data }) {
     );
   });
 
+  // aggregate rating pulled from the scraped place data
+  const placeMeta = data.reviews[0];
+  const totalScore = placeMeta?.totalScore;
+  const reviewsCount = placeMeta?.reviewsCount;
+  const placeUrl = placeMeta?.url;
+
+  const summaryStarsJSX = Array.from({ length: 5 }, (_, index) => (
+    <StarIcon key={index} sx={{ color: "#FABB05", fontSize: "1.6rem" }} />
+  ));
+
   const testimonialCardsJSX = filteredReviewData.map((item, index) => {
     if (index > 15) return null;
     return (
@@ -71,7 +82,8 @@ export default function GoogleReviewsCarousel({ data }) {
         name={item.name}
         description={item.text}
         customerPic={item.reviewerPhotoUrl}
-        characterLimit={80}
+        date={item.publishAt}
+        characterLimit={160}
       />
     );
   });
@@ -86,7 +98,7 @@ export default function GoogleReviewsCarousel({ data }) {
             className="title"
             align="center"
           >
-            Google Reviews
+            What Wellington Locals Say
           </Typography>
           <Typography
             variant="h6"
@@ -94,51 +106,59 @@ export default function GoogleReviewsCarousel({ data }) {
             className="description mt-16 medium"
             align="center"
           >
-            Explore authentic customer feedback and see why people trust us.
-            Each review reflects the quality and dedication we bring to every
-            service we provide.
+            The highest rated and most reviewed cleaning team in Wellington —
+            every review below is verified on Google.
           </Typography>
+          <div className={`${styles.summaryRow} mt-24`}>
+            {totalScore && (
+              <div className={`${styles.scoreWrapper} flex align-center gap-8`}>
+                <Typography
+                  variant="h3"
+                  component="span"
+                  className={`${styles.scoreNumber}`}
+                >
+                  {Number(totalScore).toFixed(1)}
+                </Typography>
+                <div className="flex align-center">{summaryStarsJSX}</div>
+              </div>
+            )}
+            {reviewsCount && (
+              <Typography
+                variant="body1"
+                component="p"
+                className={`${styles.reviewsCount}`}
+              >
+                Based on{" "}
+                <Image
+                  src="/google.png"
+                  alt="Google"
+                  width={18}
+                  height={18}
+                  className={`${styles.googleLogoInline}`}
+                />{" "}
+                <strong>{reviewsCount} Google reviews</strong>
+              </Typography>
+            )}
+            {placeUrl && (
+              <Button
+                variant="outlined"
+                href={placeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                endIcon={<CallMadeOutlinedIcon />}
+                className={`${styles.allReviewsButton}`}
+              >
+                Read All Reviews on Google
+              </Button>
+            )}
+          </div>
         </div>
       </Container>
-      <div className="carousel-wrapper embla mt-32">
+      <div className={`carousel-wrapper embla mt-32 ${styles.fadeEdges}`}>
         <div className="embla__viewport" ref={emblaRef}>
           <div className="embla__container">{testimonialCardsJSX}</div>
         </div>
-        {/* 
-          <div className="embla__controls ">
-            <div className="embla__dots">
-              {scrollSnaps.map((_, index) => (
-                <DotButton
-                  key={index}
-                  onClick={() => onDotButtonClick(index)}
-                  className={"embla__dot".concat(
-                    index === selectedIndex ? " embla__dot--selected" : "",
-                  )}
-                />
-              ))}
-            </div>
-            <div className="embla__buttons">
-              <PrevButton
-                onClick={onPrevButtonClick}
-                disabled={prevBtnDisabled}
-              />
-              <NextButton
-                onClick={onNextButtonClick}
-                disabled={nextBtnDisabled}
-              />
-            </div>
-          </div> */}
       </div>
-      {/* <Container maxWidth="xl" className="cta-wrapper mt-16 flex justify-center flex-wrap gap-16">
-        <Link href={"https://g.page/r/CRY0fyyR4ApsEBM/review"} target="_blank">
-          <Button variant={`contained`} endIcon={<CallMadeOutlinedIcon />}>
-            Leave a Review
-          </Button>
-        </Link>
-        <Link href="/customer-reviews">
-          <Button variant={`outlined`}>Read All Reviews</Button>
-        </Link>
-      </Container> */}
     </section>
   );
 }

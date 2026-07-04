@@ -1,6 +1,8 @@
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
+import Button from "@mui/material/Button";
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import HeroUSP from "../../../USP/HeroUSP";
 import Image from "next/image";
 import BeforeAfter from "../../../BeforeAfterSlider/BeforeAfter";
@@ -16,7 +18,6 @@ export default function FormSection({
   reviewerPics,
 }) {
   let graphicComponent = null;
-  console.log(reviewerPics);
   if (graphic.graphic_type === "image" && graphic.image) {
     const paddingBottom = (graphic.image.height / graphic.image.width) * 100;
     graphicComponent = (
@@ -83,16 +84,52 @@ export default function FormSection({
               {description}
             </Typography>
             <HeroUSP data={usp} className="mb-16" twoColumnsGrid={true} />
-            {graphicComponent}
           </div>
+          {graphicComponent && (
+            <div className={`${styles.graphicWrapper}`}>{graphicComponent}</div>
+          )}
           <Paper
+            id="quote-form"
             className={`${styles.formWrapper} border-radius-12`}
-            variant="outlined"
+            elevation={0}
           >
+            <div className={`${styles.formHeader}`}>
+              <Typography
+                variant="h5"
+                component="h2"
+                className={`${styles.formTitle} center-align`}
+              >
+                Get Your Free Quote
+              </Typography>
+              <Typography
+                variant="body2"
+                component="p"
+                className={`${styles.formSubtitle} center-align`}
+              >
+                Takes less than a minute
+              </Typography>
+            </div>
             <GetQuoteForm hideTitle={true} />
           </Paper>
         </div>
       </Container>
+      <div className={`${styles.mobileCtaBar}`}>
+        <Button
+          variant="contained"
+          href="#quote-form"
+          className={`${styles.mobileCtaButton}`}
+        >
+          Get My Free Quote
+        </Button>
+        <Button
+          variant="outlined"
+          href={`tel:${process.env.NEXT_PUBLIC_PHONE_NUMBER}`}
+          startIcon={<LocalPhoneIcon />}
+          className={`${styles.mobileCallButton}`}
+        >
+          Call
+        </Button>
+      </div>
     </section>
   );
 }

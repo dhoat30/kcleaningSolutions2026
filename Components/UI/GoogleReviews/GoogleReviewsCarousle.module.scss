@@ -1,38 +1,98 @@
-.section { 
+.section {
     background:var(--light-surface-container-low);
-  
+    scroll-margin-top: 96px;
+
     padding: 40px 0;
     @media (max-width: 600px) {
       padding: 40px 0;
     }
-    .container { 
-      .titleRow{ 
-        max-width: 900px; 
+    .container {
+      .titleRow{
+        max-width: 900px;
         margin: 0 auto;
       }
-
-  
-
+      .summaryRow{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        .scoreWrapper{
+          .scoreNumber{
+            font-weight: 700;
+            line-height: 1;
+          }
+        }
+        .reviewsCount{
+          color: var(--light-on-surface-variant);
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          strong{
+            color: var(--light-on-surface);
+          }
+          .googleLogoInline{
+            display: inline-block;
+            vertical-align: middle;
+          }
+        }
+        .allReviewsButton{
+          margin-top: 4px;
+        }
+      }
     }
 }
-.slide{ 
+
+/* soften carousel edges so cards fade in/out instead of hard-clipping */
+.fadeEdges{
+  @media(min-width: 900px){
+    mask-image: linear-gradient(
+      90deg,
+      transparent 0,
+      #000 12%,
+      #000 88%,
+      transparent 100%
+    );
+  }
+}
+
+.slide{
     background: var(--light-surface-container-lowest);
-    padding: 16px;
+    padding: 20px;
     border: 1px solid var(--light-outline-variant);
+    box-shadow: 0 4px 16px rgba(8, 33, 141, 0.06);
     max-width: calc(100% - 16px);
+    display: flex;
+    flex-direction: column;
     .profileWrapper {
         display: flex;
-        flex-wrap: wrap;
         align-items: center;
-        gap: 8px;
+        gap: 12px;
         img{
           border-radius: 50%;
         }
+        .nameWrapper{
+          min-width: 0;
+          h3{
+            line-height: 1.3;
+          }
+          .starsRow{
+            .reviewDate{
+              color: var(--light-on-surface-variant);
+              margin-left: 4px;
+              white-space: nowrap;
+            }
+          }
+        }
+        .sourceLogoWrapper{
+          margin-left: auto;
+          align-self: flex-start;
+        }
       }
-     
+
   .descriptionWrapper {
     position: relative;
-   
+    flex: 1;
+
     .readMorebutton {
       background: none;
       border: none;
@@ -40,6 +100,7 @@
       cursor: pointer;
       font-weight: 500;
       text-decoration: underline;
+      padding: 0;
     }
   }
 }
@@ -49,9 +110,9 @@
   background: var(--light-surface-container-highest);
   border-radius: 50px;
   max-width: 324px;
- 
-  padding: 8px 8px; 
-  @media(max-width: 365px){ 
+border: 1px solid var(--light-outline-variant);
+  padding: 8px 8px;
+  @media(max-width: 365px){
     justify-content: center;
   }
   .reviewerPicsWrapper {
@@ -65,18 +126,18 @@
 
       .reviewerPic:first-child {
           margin-left: 0;
-          @media(max-width: 365px){ 
-            display: none; 
+          @media(max-width: 365px){
+            display: none;
           }
           /* first one stays in place */
       }
       .reviewerPic:nth-child(2) {
-      
-        @media(max-width: 325px){ 
-          display: none; 
+
+        @media(max-width: 325px){
+          display: none;
         }
         /* first one stays in place */
     }
-     
+
   }
 }

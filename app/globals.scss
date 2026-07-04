@@ -1422,3 +1422,14 @@ h2, h3, h4, h5 {
     }
   }
 }
+
+/* Pages with the hero quote form show a sticky mobile CTA bar (FormSection),
+   so hide the floating phone FAB there and keep the bar clear of the footer */
+@media (max-width: 1000px) {
+  body:has(#quote-form) {
+    padding-bottom: 76px;
+    [class*="fabPhone"] {
+      display: none !important;
+    }
+  }
+}

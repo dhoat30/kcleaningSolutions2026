@@ -48,7 +48,7 @@ function GoogleReviewSnippet({ reviewerPics, reviewTitle }) {
             className={`${styles.reivewRating} italic`}
             sx={{ fontSize: "0.8rem", lineHeight: 0 }}
           >
-            4.9/5
+            5.0
           </Typography>
         </div>
       </div>

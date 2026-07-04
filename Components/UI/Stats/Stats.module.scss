@@ -1,16 +1,32 @@
-.section{ 
-    padding: 40px 0;
-    background: var(--dark-primary-container); 
-    @media(max-width: 600px){ 
-        padding: 24px 0 ;
+.section{
+    padding: 56px 0;
+    background: linear-gradient(
+        92deg,
+        rgba(54, 0, 226, 1) 0%,
+        rgba(85, 24, 167, 1) 55%,
+        rgba(139, 49, 198, 1) 100%
+    );
+    @media(max-width: 600px){
+        padding: 32px 0;
     }
-    .container { 
-        @media(max-width: 600px ){ 
+    .container {
+        @media(max-width: 600px ){
             justify-content: center;
         }
-       .statWrapper{ 
-        .value, .label{ 
-            color: white; 
+       .statWrapper{
+        flex: 1;
+        min-width: 180px;
+        @media(min-width: 700px){
+            &:not(:first-child){
+                border-left: 1px solid rgba(255, 255, 255, 0.25);
+            }
+        }
+        .value{
+            color: white;
+            font-weight: 700;
+        }
+        .label{
+            color: rgba(255, 255, 255, 0.85);
         }
        }
     }

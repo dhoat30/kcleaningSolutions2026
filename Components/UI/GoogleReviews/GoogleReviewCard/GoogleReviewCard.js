@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import StarIcon from "@mui/icons-material/Star";
 import GoogleIcon from "../../Icons/GoogleIcon";
 import styles from '../GoogleReviewsCarousle.module.scss'
-export default function GoogleReviewCard({ name, description, customerPic, className, showFacebookLogo, characterLimit = 180 }) {
+export default function GoogleReviewCard({ name, description, customerPic, date, className, showFacebookLogo, characterLimit = 180 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const numberOfStars = 5;
   const starsJSX = Array.from({ length: numberOfStars }, (_, index) => (
@@ -22,22 +22,34 @@ export default function GoogleReviewCard({ name, description, customerPic, class
       : description;
 let sourceLogo = showFacebookLogo ? <Image src="/facebook-reviews.png" alt="facebook page" width={96} height={24}/> :   <GoogleIcon />;
   return (
-    <div className={`${className} ${styles.slide} embla__slide border-radius-8`}>
+    <div className={`${className} ${styles.slide} embla__slide border-radius-12`}>
       <div className={`${styles.profileWrapper}`}>
         <Image
           src={customerPic}
           alt={`${name} profile picture`}
-          width="40"
-          height="40"
+          width="44"
+          height="44"
         />
         <div className={`${styles.nameWrapper}`}>
           <Typography variant="subtitle1" component="h3">
             {name}
           </Typography>
-          {starsJSX}
+          <div className={`${styles.starsRow} flex align-center gap-4`}>
+            {starsJSX}
+            {date && (
+              <Typography
+                variant="body2"
+                component="span"
+                className={`${styles.reviewDate}`}
+              >
+                {date}
+              </Typography>
+            )}
+          </div>
         </div>
+        <div className={`${styles.sourceLogoWrapper}`}>{sourceLogo}</div>
       </div>
-      <div className={`${styles.descriptionWrapper} mt-16 mb-16`}>
+      <div className={`${styles.descriptionWrapper} mt-16`}>
         <Typography variant="body1" component="p" className="mb-16">
           {isExpanded ? description : shortDescription}
         </Typography>
@@ -47,9 +59,6 @@ let sourceLogo = showFacebookLogo ? <Image src="/facebook-reviews.png" alt="face
           </button>
         )}
       </div>
-        {sourceLogo}
     </div>
   );
 }
-
-

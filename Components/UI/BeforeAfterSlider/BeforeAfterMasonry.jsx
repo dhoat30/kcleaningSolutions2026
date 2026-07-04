@@ -2,6 +2,7 @@ import Typography from "@mui/material/Typography";
 import Image from "next/image";
 import React from "react";
 import { ReactCompareSlider } from "react-compare-slider";
+import CompareLabel from "./CompareLabel";
 
 export default function BeforeAfterMasonry({ data, showTitle, priority }) {
   if (!data.beforeImage) return null;
@@ -23,20 +24,26 @@ export default function BeforeAfterMasonry({ data, showTitle, priority }) {
               touchAction: "pan-y",
             }}
             itemTwo={
-              <Image
-                src={data.beforeImage.url}
-                alt={data.beforeImage.alt ? data.beforeImage.alt : "Before"}
-                priority={priority}
-                fill
-              />
+              <>
+                <Image
+                  src={data.beforeImage.url}
+                  alt={data.beforeImage.alt ? data.beforeImage.alt : "Before"}
+                  priority={priority}
+                  fill
+                />
+                <CompareLabel position="right">Before</CompareLabel>
+              </>
             }
             itemOne={
-              <Image
-                src={data.afterImage.url}
-                alt={data.afterImage.alt ? data.afterImage.alt : "Before"}
-                fill
-                priority={priority}
-              />
+              <>
+                <Image
+                  src={data.afterImage.url}
+                  alt={data.afterImage.alt ? data.afterImage.alt : "After"}
+                  fill
+                  priority={priority}
+                />
+                <CompareLabel position="left">After</CompareLabel>
+              </>
             }
           /> : <div className="image-wrapper"   style={{
             paddingBottom: `${

@@ -47,8 +47,12 @@ export const headerLinks = [
   // },
 
   {
-    label: "End of Tenancy Cleaning",
-    url: "/end-of-tenancy-cleaning",
+    label: "Move-Out Cleaning",
+    url: "/move-out-cleaning-wellington",
+  },
+   {
+    label: "Move-In Cleaning",
+    url: "/move-in-cleaning-wellington",
   },
   {
     id: 2,

@@ -5,6 +5,7 @@ import {
   ReactCompareSlider,
   ReactCompareSliderImage,
 } from "react-compare-slider";
+import CompareLabel from "./CompareLabel";
 
 export default function BeforeAfter({ data, showTitle }) {
   if (!data.afterImage || !data.beforeImage) return null;
@@ -26,23 +27,28 @@ export default function BeforeAfter({ data, showTitle }) {
           touchAction: "pan-y",
         }}
         itemTwo={
-          <Image
-            src={data.beforeImage.url}
-            alt={data.beforeImage.alt ? data.beforeImage.alt : "Before image"}
-            sizes="(max-width: 1200px) 100vw, 50vw"
-            fill
-            priority
-          />
+          <>
+            <Image
+              src={data.beforeImage.url}
+              alt={data.beforeImage.alt ? data.beforeImage.alt : "Before image"}
+              sizes="(max-width: 1200px) 100vw, 50vw"
+              fill
+              priority
+            />
+            <CompareLabel position="right">Before</CompareLabel>
+          </>
         }
         itemOne={
-          <Image
-            src={data.afterImage.url}
-            alt={data.afterImage.alt ? data.afterImage.alt : "After Image"}
-            fill
-            priority
-            sizes="(max-width: 1200px) 100vw, 50vw"
-
-          />
+          <>
+            <Image
+              src={data.afterImage.url}
+              alt={data.afterImage.alt ? data.afterImage.alt : "After Image"}
+              fill
+              priority
+              sizes="(max-width: 1200px) 100vw, 50vw"
+            />
+            <CompareLabel position="left">After</CompareLabel>
+          </>
         }
       />
     </div>

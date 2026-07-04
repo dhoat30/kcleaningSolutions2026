@@ -1,6 +1,11 @@
 export const servicePropertyMap = {
   Residential: [
     { value: "End-of-Tenancy", label: "End-of-Tenancy", price: 0 },
+        { value: "Move-In Cleaning", label: "Move-In Cleaning", price: 0 },
+        { value: "Move-Out Cleaning", label: "Move-Out Cleaning", price: 0 },
+
+        { value: "Regular House Cleaning", label: "Regular House Cleaning", price: 150 },
+
     { value: "Deep Cleaning", label: "Deep Cleaning", price: 400 },
     { value: "Carpet Cleaning", label: "Carpet Cleaning", price: 0 },
     { value: "Apartment Cleaning", label: "Apartment Cleaning", price: 0 },
