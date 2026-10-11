@@ -50,6 +50,10 @@ export const headerLinks = [
     label: "Move-Out Cleaning",
     url: "/move-out-cleaning-wellington",
   },
+  {
+    label: "Carpet Shampoo",
+    url: "/carpet-shampoo-wellington",
+  },
    {
     label: "Move-In Cleaning",
     url: "/move-in-cleaning-wellington",

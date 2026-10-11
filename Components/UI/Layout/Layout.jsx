@@ -1,8 +1,7 @@
 import RowSection from "./Sections/RowSection/RowSection";
-import ServicesSection from "./Sections/ServicesSection/ServicesSection";
+import CleaningServices from "./Sections/ServicesSection/CleaningServices";
 import FaqAccordionSection from "./Sections/FaqAccordionSection/FaqAccordionSection";
 import FormSection from "./Sections/FormSection/FormSection";
-import FormHeroSection from "./Sections/FormHeroSection/FormHeroSection";
 import RegularProcess from "./Sections/Process/RegularProcess";
 import USP from "../USP/USP";
 import Stats from "../Stats/Stats";
@@ -15,9 +14,6 @@ import GoogleReviewsCarousel from "../GoogleReviews/GoogleReviewsCarousel";
 import UspTable from "./Sections/UspTable/UspTable";
 import VerticalTabs from "./Sections/VerticalTabs/VerticalTabs";
 import CardsSection from "./Sections/CardsSection/CardsSection";
-import TabsSection from "./Sections/TabsSection/TabsSection";
-import HeroSectionColumns from "./Sections/HeroSection/HeroSectionColumns";
-import HeroSectionRows from "./Sections/HeroSection/HeroSectionRows";
 import OurWorkSection from "./Sections/OurWorkSection/OurWorkSection";
 import RowCardTabs from "./Sections/RowCardTabs/RowCardTabs";
 import PriceSliderSection from "./Sections/PriceSliderSection/PriceSliderSection";
@@ -43,7 +39,22 @@ export default function Layout({
 }) {
   if (!sections) return null;
   console.log(sections);
-  const sectionsJSX = sections.map((section, index) => {
+  const isServicesSection = (section) =>
+    ["tabs_section", "services"].includes(section.acf_fc_layout) ||
+    (section.acf_fc_layout === "show_services" && section.show_services);
+  const servicesSection = sections.find(isServicesSection);
+  const reviewsSection = googleReviewsData?.reviews?.length > 0
+    ? sections.find((section) => section.acf_fc_layout === "show_reviews")
+    : undefined;
+  const orderedSections = servicesSection && reviewsSection
+    ? sections
+      .filter((section) => !isServicesSection(section))
+      .flatMap((section) => section === reviewsSection
+        ? [section, servicesSection]
+        : [section])
+    : sections;
+
+  const sectionsJSX = orderedSections.map((section, index) => {
     if (section.acf_fc_layout === "our_work") {
       return (
         <OurWorkSection
@@ -54,19 +65,8 @@ export default function Layout({
         />
       );
     }
-    if (section.acf_fc_layout === "tabs_section") {
-      return (
-        <TabsSection
-          key={index}
-          title={section.title ? section.title : section.section_title}
-          description={
-            section.description
-              ? section.description
-              : section.section_description
-          }
-          cards={section.cards ? section.cards : section.tabs}
-        />
-      );
+    if (isServicesSection(section)) {
+      return <CleaningServices key={index} />;
     }
     if (section.acf_fc_layout === "row_section_tabs") {
       return (
@@ -113,17 +113,6 @@ export default function Layout({
             section.show_before_after_images &&
             section.before_after_images.after_image
           }
-        />
-      );
-    }
-    if (section.acf_fc_layout === "services") {
-      return (
-        <ServicesSection
-          key={index}
-          title={section.title}
-          subtitle={section.subtitle}
-          description={section.description}
-          cards={section.cards}
         />
       );
     }
@@ -185,6 +174,7 @@ export default function Layout({
         <FormSection
           key={index}
           title={section.title}
+          subtitle={section.subtitle}
           description={section.description}
           usp={{ text_usp: section.text_usp, image_usp: section.image_usp }}
           graphic={section.graphic}
@@ -193,78 +183,24 @@ export default function Layout({
       );
     }
 
-    if (section.acf_fc_layout === "form_hero_section") {
-      let graphicData;
-      if (section.graphic_type === "new_graphic_type") {
-        graphicData = section.new_graphic_type;
-      }
-      if (section.graphic_type === "image") {
-        graphicData = section.image;
-      }
-      if (section.graphic_type === "youtube_video") {
-        graphicData = section.youtube_video_group;
-      }
+    if (["form_hero_section", "hero_section"].includes(section.acf_fc_layout)) {
+      const graphic = {
+        graphic_type: section.graphic_type === "new_graphic_type" ? "image" : section.graphic_type,
+        image: section.graphic_type === "new_graphic_type"
+          ? section.new_graphic_type?.[0]?.image
+          : section.image,
+        youtube_video: section.youtube_video_group,
+      };
       return (
-        <FormHeroSection
+        <FormSection
           key={index}
           title={section.title}
           subtitle={section.subtitle}
           description={section.description}
-          cta={section.cta}
-          graphicType={section.graphic_type}
-          graphicData={graphicData}
-          uspData={section.usp}
-          reviewTitle={section.review_title}
-          reviewerPics={reviewerPics}
+          usp={section.usp || { text_usp: section.text_usp, image_usp: section.image_usp }}
+          graphic={graphic}
         />
       );
-    }
-
-    if (section.acf_fc_layout === "hero_section") {
-      let graphicData;
-      if (section.graphic_type === "new_graphic_type") {
-        graphicData = section.new_graphic_type;
-      }
-      if (section.graphic_type === "image") {
-        graphicData = section.image;
-      }
-      if (section.graphic_type === "youtube_video") {
-        graphicData = section.youtube_video_group;
-      }
-
-      if (section.layout === "columns") {
-        return (
-          <HeroSectionColumns
-            key={index}
-            title={section.title}
-            subtitle={section.subtitle}
-            description={section.description}
-            ctaArr={section.cta_array}
-            graphicType={section.graphic_type}
-            graphicData={graphicData}
-            uspData={section.usp}
-            reviewTitle={section.review_title}
-            reviewerPics={reviewerPics}
-          />
-        );
-      }
-      if (section.layout === "rows") {
-        return (
-          <HeroSectionRows
-            key={index}
-            title={section.title}
-            subtitle={section.subtitle}
-            description={section.description}
-            ctaArr={section.cta_array}
-            graphicType={section.graphic_type}
-            graphicData={graphicData}
-            uspData={section.usp}
-            reviewTitle={section.review_title}
-            reviewerPics={reviewerPics}
-            ctaMicroCopy={section.cta_microcopy}
-          />
-        );
-      }
     }
 
     if (section.acf_fc_layout === "show_usp" && section.show_usp) {
@@ -325,18 +261,6 @@ export default function Layout({
           calculatedValueLabel={spaceCalculatorData.calculated_value_label}
           furnishedLevelData={spaceCalculatorData.furnished_level}
           price={section.price}
-        />
-      );
-    }
-    if (section.acf_fc_layout === "show_services" && section.show_services) {
-      if (servicesData === undefined) return null;
-      return (
-        <ServicesSection
-          key={index}
-          title={servicesData.title}
-          subtitle={servicesData.subtitle}
-          description={servicesData.description}
-          cards={servicesData.cards}
         />
       );
     }

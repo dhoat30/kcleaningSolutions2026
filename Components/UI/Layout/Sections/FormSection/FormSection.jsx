@@ -1,134 +1,189 @@
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
-import Button from "@mui/material/Button";
-import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
-import HeroUSP from "../../../USP/HeroUSP";
 import Image from "next/image";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import CheckIcon from "@mui/icons-material/Check";
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import ShieldOutlinedIcon from "@mui/icons-material/ShieldOutlined";
+import VerifiedOutlinedIcon from "@mui/icons-material/VerifiedOutlined";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
 import BeforeAfter from "../../../BeforeAfterSlider/BeforeAfter";
 import GetQuoteForm from "@/Components/UI/Forms/GetQuoteForm";
 import Video from "@/Components/UI/Video/Video";
+import reviewsData from "@/data/google-reviews.json";
+import { cleaningPhone, cleaningPhoneHref } from "@/utils/cleaningContact";
 import styles from "./FormSection.module.scss";
-import GoogleReviewSnippet from "@/Components/UI/GoogleReviews/GoogleReviewCard/GoogleReviewSnippet";
+
+const defaultServices = [
+  "Deep cleaning",
+  "Oven cleaning",
+  "Window cleaning",
+  "Carpet cleaning",
+  "Move-out cleaning",
+  "House cleaning",
+];
+
+function HeroTitle({ title }) {
+  if (/<[a-z][\s\S]*>/i.test(title)) {
+    return (
+      <h1
+        className={styles.title}
+        dangerouslySetInnerHTML={{
+          __html: title.replace(/<\/?h[1-6][^>]*>/gi, "").trim(),
+        }}
+      />
+    );
+  }
+
+  return (
+    <h1 className={styles.title}>
+      {title.split(/(Wellington)/i).map((part, index) =>
+        /^Wellington$/i.test(part) ? <span key={index}>{part}</span> : part,
+      )}
+    </h1>
+  );
+}
+
 export default function FormSection({
-  title,
+  title = "Professional Cleaners in Wellington",
+  subtitle = "Your local Wellington cleaning team",
+  tagline = "A cleaner home. More time for you.",
   description,
   usp,
   graphic,
-  reviewerPics,
+  formName,
+  imageCaption = "Professional care for the place you call home.",
 }) {
+  const services = (usp?.text_usp || [])
+    .map((item) => item.value?.trim())
+    .filter(Boolean)
+    .filter((value) => !/insured|guarantee|highest rated|most reviewed/i.test(value));
+  const review = reviewsData.reviews?.[0];
   let graphicComponent = null;
-  if (graphic.graphic_type === "image" && graphic.image) {
-    const paddingBottom = (graphic.image.height / graphic.image.width) * 100;
+
+  if (graphic?.graphic_type === "image" && graphic.image?.url) {
     graphicComponent = (
-      <div
-        className="image-wrapper border-radius-12"
-        style={{ paddingBottom: `${paddingBottom}%` }}
-      >
+      <div className={styles.imageWrapper}>
         <Image
           src={graphic.image.url}
-          alt={graphic.image.alt}
+          alt={graphic.image.alt || "Professional cleaning by K Cleaning Solution"}
           fill
-          sizes="(max-width: 1000px) 100vw, 50vw"
+          sizes="(max-width: 1000px) 100vw, (max-width: 1500px) 55vw, 760px"
           priority
         />
       </div>
     );
   }
-  if (graphic.graphic_type === "before_after") {
+  if (graphic?.graphic_type === "before_after") {
     graphicComponent = (
-      <div className="border-radius-12 overflow-hidden">
-        <BeforeAfter
-          data={{
-            beforeImage: graphic.before_after_image.before,
-            afterImage: graphic.before_after_image.after,
-          }}
-        />
-      </div>
-    );
-  }
-  if (graphic.graphic_type === "video") {
-    graphicComponent = (
-      <Video
-        videoHosted={"self"}
-        url={graphic.video.video.url}
-        placeholderImage={graphic.video.placeholder_image}
-        showCompressedImage={true}
+      <BeforeAfter
+        data={{
+          beforeImage: graphic.before_after_image.before,
+          afterImage: graphic.before_after_image.after,
+        }}
       />
     );
   }
-  if (graphic.graphic_type === "youtube_video") {
+  if (graphic?.graphic_type === "video" && graphic.video?.video?.url) {
+    graphicComponent = (
+      <video
+        className={styles.video}
+        controls
+        preload="none"
+        poster={graphic.video.placeholder_image?.url}
+        aria-label="See K Cleaning Solution at work"
+      >
+        <source src={graphic.video.video.url} />
+      </video>
+    );
+  }
+  if (graphic?.graphic_type === "youtube_video" && graphic.youtube_video?.placeholder_image) {
     graphicComponent = (
       <Video
-        videoHosted={"youtube"}
         videoID={graphic.youtube_video.youtube_id}
         placeholderImage={graphic.youtube_video.placeholder_image}
-        showCompressedImage={true}
+        showCompressedImage
+        priority
       />
     );
   }
+
   return (
-    <section className={`${styles.section}`}>
-      <Container maxWidth="lg" className={`${styles.container}`}>
-        <div className={`${styles.grid} grid gap-24`}>
-          <div className={`${styles.contentWrapper} border-radius-12`}>
-            <GoogleReviewSnippet reviewerPics={reviewerPics} />
-            <Typography component={"h1"} variant={"h3"} className="title">
-              {title}
-            </Typography>
-            <Typography
-              component={"div"}
-              variant={"h6"}
-              className="description mt-16"
-            >
-              {description}
-            </Typography>
-            <HeroUSP data={usp} className="mb-16" twoColumnsGrid={true} />
-          </div>
-          {graphicComponent && (
-            <div className={`${styles.graphicWrapper}`}>{graphicComponent}</div>
-          )}
-          <Paper
-            id="quote-form"
-            className={`${styles.formWrapper} border-radius-12`}
-            elevation={0}
-          >
-            <div className={`${styles.formHeader}`}>
-              <Typography
-                variant="h5"
-                component="h2"
-                className={`${styles.formTitle} center-align`}
-              >
-                Get Your Free Quote
-              </Typography>
-              <Typography
-                variant="body2"
-                component="p"
-                className={`${styles.formSubtitle} center-align`}
-              >
-                Takes less than a minute
-              </Typography>
+    <section className={styles.section}>
+      <div className={styles.container}>
+        <div className={styles.grid}>
+          <div className={styles.contentWrapper}>
+            <p className={styles.eyebrow}>{subtitle || "Your local Wellington cleaning team"}</p>
+            <HeroTitle title={title} />
+            <p className={styles.tagline}>{tagline}</p>
+            {description && (
+              <div
+                className={styles.description}
+                dangerouslySetInnerHTML={{ __html: description }}
+              />
+            )}
+            <ul className={styles.services}>
+              {(services.length ? services : defaultServices).map((service) => (
+                <li key={service}>
+                  <CheckIcon aria-hidden="true" />
+                  <span>{service}</span>
+                </li>
+              ))}
+            </ul>
+            <div className={styles.actions}>
+              <a className={styles.quoteButton} href="#quote-form">
+                Get my free quote <ArrowForwardIcon aria-hidden="true" />
+              </a>
+              <a className={styles.callLink} href={cleaningPhoneHref}>
+                Call {cleaningPhone}
+              </a>
             </div>
-            <GetQuoteForm hideTitle={true} />
-          </Paper>
+            {review?.totalScore && (
+              <a className={styles.reviewSummary} href={review.url} target="_blank" rel="noopener noreferrer">
+                <span className={styles.stars} aria-hidden="true">★★★★★</span>
+                <span><strong>{review.totalScore.toFixed(1)}</strong> Google rating</span>
+                {review.reviewsCount && <span>{review.reviewsCount}+ customer reviews</span>}
+              </a>
+            )}
+            {graphicComponent && (
+              <div className={styles.graphicWrapper}>
+                {graphicComponent}
+                <p className={styles.imageCaption}>{imageCaption}</p>
+              </div>
+            )}
+          </div>
+
+          <div id="quote-form" className={styles.formWrapper}>
+            <div className={styles.formHeader}>
+              <h2>Get Your Free Quote</h2>
+              <p>Tell us what you need. No obligation whatsoever.</p>
+            </div>
+            <div className={styles.formBanner}>
+              <ScheduleOutlinedIcon aria-hidden="true" />
+              <span>A cleaner home. Friendly, local service.</span>
+            </div>
+            <div className={styles.formBody}>
+              <GetQuoteForm hideTitle hideFooter variant="hero" formName={formName} />
+              <p className={styles.privacy}>
+                <LockOutlinedIcon aria-hidden="true" />
+                Your details are private. No spam, ever.
+              </p>
+              <p className={styles.preferToTalk}>
+                Prefer to talk?
+                <a href={cleaningPhoneHref}><LocalPhoneIcon aria-hidden="true" />{cleaningPhone}</a>
+              </p>
+              <ul className={styles.trustBadges}>
+                <li><ShieldOutlinedIcon aria-hidden="true" /><span>$2M insured</span></li>
+                <li><VerifiedOutlinedIcon aria-hidden="true" /><span>Satisfaction guaranteed</span></li>
+                <li><LocationOnOutlinedIcon aria-hidden="true" /><span>Local team</span></li>
+              </ul>
+            </div>
+          </div>
         </div>
-      </Container>
-      <div className={`${styles.mobileCtaBar}`}>
-        <Button
-          variant="contained"
-          href="#quote-form"
-          className={`${styles.mobileCtaButton}`}
-        >
-          Get My Free Quote
-        </Button>
-        <Button
-          variant="outlined"
-          href={`tel:${process.env.NEXT_PUBLIC_PHONE_NUMBER}`}
-          startIcon={<LocalPhoneIcon />}
-          className={`${styles.mobileCallButton}`}
-        >
-          Call
-        </Button>
+      </div>
+      <div className={styles.mobileCtaBar}>
+        <a className={styles.quoteButton} href="#quote-form">Get my free quote <ArrowForwardIcon aria-hidden="true" /></a>
+        <a className={styles.mobileCallButton} href={cleaningPhoneHref}><LocalPhoneIcon aria-hidden="true" />Call</a>
       </div>
     </section>
   );

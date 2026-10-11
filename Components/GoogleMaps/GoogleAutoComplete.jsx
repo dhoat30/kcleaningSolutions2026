@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import { useEffect, useId, useRef } from "react";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import GoogleMapsLoader from "./GoogleMapsLoader";
 
 export default function GoogleAutocomplete({
+  id,
   value,
   onChange,
   onSelect,
@@ -16,93 +18,75 @@ export default function GoogleAutocomplete({
   autoComplete,
   inputTitle,
 }) {
+  const generatedId = useId();
   const inputRef = useRef(null);
-  const autocompleteRef = useRef(null);
+  const onSelectRef = useRef(onSelect);
 
   useEffect(() => {
-    let cancelled = false;
+    onSelectRef.current = onSelect;
+  }, [onSelect]);
+
+  useEffect(() => {
+    let autocomplete;
+    let listener;
 
     const init = () => {
-      if (cancelled) return;
-      if (!window.google?.maps?.places) return;
-      if (!inputRef.current || autocompleteRef.current) return;
+      if (!window.google?.maps?.places?.Autocomplete || !inputRef.current || autocomplete) return;
 
-      const ac = new window.google.maps.places.Autocomplete(inputRef.current, {
+      autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, {
         types: ["address"],
         componentRestrictions: { country: "nz" },
+        fields: ["address_components", "formatted_address"],
       });
-      autocompleteRef.current = ac;
 
-      ac.addListener("place_changed", () => {
-        const place = ac.getPlace();
-        if (!place || !place.address_Components) return;
+      listener = autocomplete.addListener("place_changed", () => {
+        const place = autocomplete.getPlace();
+        if (!place?.formatted_address) return;
 
-        let streetNumber = "";
-        let streetName = "";
-        let suburb = "";
-        let city = "";
-        let region = "";
-        let postalCode = "";
+        const components = place.address_components || [];
+        const component = (type, format = "long_name") => components.find((item) => item.types.includes(type))?.[format] || "";
 
-        place.address_Components.forEach((c) => {
-          const t = c.types;
-          if (t.includes("street_number")) streetNumber = c.long_name;
-          if (t.includes("route")) streetName = c.long_name;
-          if (t.includes("sublocality") || t.includes("sublocality_level_1")) suburb = c.long_name;
-          if (t.includes("locality")) city = c.long_name;
-          if (t.includes("administrative_area_level_1")) region = c.long_name;
-          if (t.includes("postal_code")) postalCode = c.long_name;
+        onSelectRef.current?.({
+          formattedAddress: place.formatted_address,
+          unformattedAddress: {
+            streetNumber: component("street_number"),
+            streetName: component("route"),
+            suburb: component("sublocality_level_1") || component("sublocality"),
+            city: component("locality"),
+            region: component("administrative_area_level_1"),
+            postalCode: component("postal_code"),
+            country: component("country", "short_name"),
+          },
         });
-
-        const unformatted = { streetNumber, streetName, suburb, city, region, postalCode };
-        if (place.formatted_address) {
-          onSelect({
-            formattedAddress: place.formatted_address,
-            unformattedAddress: unformatted,
-          });
-        }
       });
     };
 
-    // if already loaded, init immediately
-    if (window.google?.maps?.places) {
-      init();
-    } else {
-      // otherwise wait for the global event from layout
-      const onReady = () => init();
-      window.addEventListener("gmaps-ready", onReady);
-      // also do a small polling in case user navigated from another page and onLoad already fired
-      const t = setInterval(() => {
-        if (window.google?.maps?.places) {
-          clearInterval(t);
-          init();
-        }
-      }, 100);
-      // cleanup
-      return () => {
-        cancelled = true;
-        window.removeEventListener("gmaps-ready", onReady);
-        clearInterval(t);
-      };
-    }
+    window.addEventListener("gmaps-ready", init);
+    init();
 
     return () => {
-      cancelled = true;
+      window.removeEventListener("gmaps-ready", init);
+      listener?.remove();
+      autocomplete?.unbindAll();
     };
-  }, [onSelect]);
+  }, []);
 
   return (
     <>
-      {inputTitle && (
-        <Typography variant="h6" component="h2" className="mt-24">
-          {inputTitle}
-        </Typography>
-      )}
+      <GoogleMapsLoader />
+      {inputTitle && <Typography variant="h6" component="h2" className="mt-24">{inputTitle}</Typography>}
       <TextField
+        id={id || generatedId}
+        name={id}
         className={className}
         label={label}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(event) => onChange(event.target.value)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+          }
+        }}
         inputRef={inputRef}
         color="secondary"
         fullWidth

@@ -3,7 +3,66 @@
       .inputWrapper {
         background: var(--light--surface-container);
         border-radius: 12px;
-      
+
       }
-    
+
+}
+
+.nameRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+
+  > :global(.MuiFormControl-root) {
+    min-width: 0;
+    margin-top: 0 !important;
+  }
+
+  @media (min-width: 1001px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.hero {
+  .inputWrapper > :global(.MuiFormControl-root) {
+    margin-top: 16px;
+    &:first-child { margin-top: 0; }
+  }
+
+  :global(.MuiOutlinedInput-root) {
+    min-height: 58px;
+    border-radius: 4px;
+    color: var(--hero-copy);
+    background: #fff;
+    font-size: 1rem;
+
+    :global(.MuiOutlinedInput-notchedOutline) { border-color: #c5cad7; }
+    &:hover :global(.MuiOutlinedInput-notchedOutline) { border-color: var(--hero-ink); }
+    &:global(.Mui-focused) :global(.MuiOutlinedInput-notchedOutline) { border-color: var(--hero-ink); }
+    &:global(.Mui-error) :global(.MuiOutlinedInput-notchedOutline) { border-color: #c62828; }
+  }
+
+  :global(.MuiInputLabel-root) { color: var(--hero-copy); }
+  :global(.MuiInputLabel-root.Mui-focused) { color: var(--hero-ink); }
+  :global(.MuiInputLabel-root.Mui-error) { color: #c62828; }
+  :global(.MuiInputBase-multiline) { min-height: 108px; align-items: flex-start; }
+  :global(.MuiSelect-select) { padding-top: 17px; padding-bottom: 17px; }
+  :global(.MuiChip-root) { color: var(--hero-ink); border-color: #bec7df; }
+  :global(.MuiChip-filled) { background: var(--hero-accent); }
+  :global(.MuiTypography-h6) { font-size: 1rem; font-weight: 600; color: var(--hero-ink); }
+
+  button[type="submit"] {
+    min-height: 54px;
+    margin-top: 18px;
+    background: var(--hero-accent);
+    color: var(--hero-ink);
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    box-shadow: none;
+    &:hover { background: var(--brand-yellow-hover); }
+    &:focus-visible { outline: 3px solid var(--hero-ink); outline-offset: 3px; }
+    :global(.MuiButton-endIcon) { margin-left: 14px; }
+    :global(.MuiCircularProgress-root) { color: var(--hero-ink); }
+  }
 }

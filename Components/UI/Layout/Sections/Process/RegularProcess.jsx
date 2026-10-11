@@ -3,7 +3,7 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Image from "next/image";
-export default function RegularProcess({ title, description, cards, image }) {
+export default function RegularProcess({ title, description, cards, image, ctaHref = "/get-free-quote" }) {
   if (!cards) return null;
 
   const stepCards = cards.map((item, index) => {
@@ -83,7 +83,7 @@ export default function RegularProcess({ title, description, cards, image }) {
       <Container maxWidth="xl" className={`${styles.ctaRow} mt-40`}>
         <Button
           variant="contained"
-          href="/get-free-quote"
+          href={ctaHref}
           className={`${styles.ctaButton}`}
         >
           Get My Free Quote

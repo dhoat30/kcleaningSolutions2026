@@ -1,22 +1,29 @@
 "use client";
 
 import Script from "next/script";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 export default function GoogleMapsLoader({ onLoad }) {
-  const GOOGLE_API_KEY = "AIzaSyBfneaVJapdnzhBVxj47xdiqh6-1pfnDOE";
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+  const notifyReady = useCallback(() => {
+    window.dispatchEvent(new Event("gmaps-ready"));
+    onLoad?.();
+  }, [onLoad]);
 
   useEffect(() => {
     if (window.google && window.google.maps && window.google.maps.places) {
-      onLoad();
+      notifyReady();
     }
-  }, [onLoad]);
+  }, [notifyReady]);
+
+  if (!apiKey) return null;
 
   return (
     <Script
-      src={`https://maps.googleapis.com/maps/api/js?key=${GOOGLE_API_KEY}&libraries=places`}
-      strategy="lazyOnload"
-      onLoad={onLoad}
+      id="google-maps-places"
+      src={`https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`}
+      strategy="afterInteractive"
+      onReady={notifyReady}
     />
   );
 }

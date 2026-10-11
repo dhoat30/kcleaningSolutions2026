@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import Input from "./InputFields/Input";
 import { getQuoteFormData } from "@/utils/getQuoteFormData";
-import { servicePropertyMap } from "@/utils/getQuoteFormData"; // Import the service mapping
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import axios from "axios";
@@ -13,25 +12,27 @@ import { useRouter } from "next/navigation";
 import Typography from "@mui/material/Typography";
 import GoogleAutocomplete from "@/Components/GoogleMaps/GoogleAutoComplete";
 import styles from "./FormStyle.module.scss";
-import dayjs from "dayjs";
 import { useClickIds } from "@/hooks/useClickIds";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { cleaningPhone, cleaningPhoneHref } from "@/utils/cleaningContact";
+import { isQuoteSubmissionSuccessful, trackQuoteSubmission } from "@/utils/quoteTracking";
 
 export default function GetQuoteForm({
   className,
   formName = "Get a Quote Form",
   title = "Get Your Free Quote",
   hideTitle = false,
+  hideFooter = false,
+  variant = "default",
 }) {
   const router = useRouter();
   const [formData, setFormData] = useState({
     firstname: "", // Default empty string to make it controlled
+    lastname: "",
     email: "",
     phone: "",
     address: "",
-    propertyType: "",
-    date: null,
-    service: [],
     message: "",
   });
   const [errors, setErrors] = useState({});
@@ -39,14 +40,14 @@ export default function GetQuoteForm({
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState(false);
   const [newSubmission, setNewSubmission] = useState(false);
-  const [mapsLoaded, setMapsLoaded] = useState(false);
+  const submissionInFlight = useRef(false);
   const [googleAdsAddress, setGoogleAdsAddress] = useState({
     pickUpAddress: {},
     dropOffAddress: {},
   }); // For Google Ads conversion tracking
   // click id
   const { clickIds } = useClickIds();
-  const handleChange = (id, value, isSelectMultiple) => {
+  const handleChange = (id, value) => {
     let newValue = value.target ? value.target.value : value;
 
     setFormData((prevFormData) => ({
@@ -69,6 +70,7 @@ export default function GetQuoteForm({
   // Submit handler
   const submitHandler = (e) => {
     e.preventDefault(); // Prevent default form submission if using form tag
+    if (submissionInFlight.current) return;
 
     let allFieldsValid = true;
     const newErrors = {};
@@ -97,22 +99,17 @@ export default function GetQuoteForm({
       return; // Stop the function if any field is invalid o  r empty
     }
 
-    const parts = formData.firstname.trim().split(/\s+/); // split by any whitespace
-    const firstName = parts[0] || "";
-    const lastName = parts.slice(1).join(" ") || ""; // everything after firstName
-
-    let formattedDate = dayjs(formData.datePicker).valueOf();
-
     const dataPayload = {
       email: formData.email,
       formName: formName,
-      message: `First Name: ${formData.firstname} \nEmail: ${
-        formData.email
-      } \nPhone Number: ${formData.phone}
-      \nProperty Type: ${formData.propertyType}
-       \nServices Required: ${formData["service"].join(", ")} \n Message: ${
-         formData.message
-       } `,
+      message: [
+        `First Name: ${formData.firstname}`,
+        `Last Name: ${formData.lastname}`,
+        `Email: ${formData.email}`,
+        `Phone Number: ${formData.phone}`,
+        `Property Address: ${formData.address}`,
+        `Message: ${formData.message}`,
+      ].join("\n"),
       hubspotFormID: process.env.NEXT_PUBLIC_HUBSPOT_GET_QUOTE_FORM,
       hubspotFormObject: [
         { name: "hs_google_click_id", value: clickIds.gclid || "" },
@@ -140,13 +137,19 @@ export default function GetQuoteForm({
         { name: "fb_site_source", value: clickIds.fb_site_source || "" },
 
         { name: "firstname", value: formData.firstname },
+        { name: "lastname", value: formData.lastname },
         { name: "email", value: formData.email },
         { name: "phone", value: formData.phone },
-        { name: "property_type", value: formData.propertyType },
-        { name: "services_required", value: formData["service"].join(", ") },
-        { name: "message", value: formData.message },
+        {
+          name: "message",
+          value: [
+            formData.address && `Property Address: ${formData.address}`,
+            formData.message,
+          ].filter(Boolean).join("\n"),
+        },
       ],
     };
+    submissionInFlight.current = true;
     setIsLoading(true);
 
     // Hubspot config
@@ -164,55 +167,27 @@ export default function GetQuoteForm({
       data: dataPayload,
     };
 
-    // const facebookData = {
-    //     method: 'post',
-    //     url: '/api/facebook-conversion-api',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     data: {
-    //         data: {
-    //         event: "Lead",
-    //         firstName: formData.firstname,
-    //         email: formData.email,
-    //         phone: formData.phone,
-    //         county: "Bay of Plenty",
-    //         eventSourceUrl: window.location.href,
-    //         serviceRequested: formData['service'].join(", ")
-    //     }
-
-    //     }
-    // }
-
     Promise.all([axios(configHubspot), axios(configSendMail)])
       .then(function (response) {
-        console.log(response);
-        if (response[0].status === 200) {
+        if (isQuoteSubmissionSuccessful(response)) {
           setIsLoading(false);
           setIsSuccess(true);
           setNewSubmission(false);
           setError(false);
-          if (typeof window !== "undefined" && window.dataLayer) {
-            window.dataLayer.push({
-              event: "quote_form_submission",
-              formName: "Moving Quote",
-              formData: {
-                firstName: firstName,
-                email: formData.email,
-                phone: formData.phone,
-                street: `${googleAdsAddress.pickUpAddress.streetNumber} ${googleAdsAddress.pickUpAddress.streetName}`,
-                city: googleAdsAddress.pickUpAddress.city,
-                region: googleAdsAddress.pickUpAddress.region,
-                postCode: googleAdsAddress.pickUpAddress.postalCode,
-                gclid: clickIds.gclid,
-                gbraid: clickIds.gbraid,
-                wbraid: clickIds.wbraid,
-                fbclid: clickIds.fbclid,
-                fbc: clickIds.fbc,
-                fbp: clickIds.fbp,
-              },
+          try {
+            const address = googleAdsAddress.address || googleAdsAddress.pickUpAddress || {};
+            trackQuoteSubmission({
+              formData,
+              formName,
+              address,
+              clickIds,
             });
+          } catch {
+            console.warn("Quote received, but conversion tracking could not be queued.");
           }
           router.push("/form-submitted/thank-you");
         } else {
+          submissionInFlight.current = false;
           setIsLoading(false);
           setIsSuccess(false);
           setError(true);
@@ -221,6 +196,7 @@ export default function GetQuoteForm({
       })
       .catch(function (error) {
         console.log(error);
+        submissionInFlight.current = false;
         setIsLoading(false);
         setIsSuccess(false);
         setError(true);
@@ -228,54 +204,23 @@ export default function GetQuoteForm({
       });
   };
 
-  // Get the filtered service options based on propertyType
-  const getFilteredServiceOptions = () => {
-    if (formData.propertyType && servicePropertyMap[formData.propertyType]) {
-      return servicePropertyMap[formData.propertyType];
-    }
-    return [];
-  };
-
-  // Initialize Google Maps script
-  const handleLoad = () => {
-    setMapsLoaded(true);
-  };
   // is address field
   const isAddressField = (id) => {
     return ["address", "pickUpAddress", "dropOffAddress"].includes(id);
   };
-  const formInputs = getQuoteFormData.map((field, index) => {
-    if (field.id === "service") {
-      const filteredOptions = getFilteredServiceOptions();
-      return (
-        <Input
-          lightTheme={true}
-          key={index}
-          label={field.label}
-          type={field.type}
-          value={formData[field.id]}
-          onChange={(newValue) =>
-            handleChange(field.id, newValue, field.multiple)
-          }
-          onBlur={
-            field.required ? () => handleBlur(field.id, field.validation) : null
-          }
-          required={field.required}
-          autoComplete={field.autoComplete}
-          isInvalid={errors[field.id]}
-          errorMessage={field.errorMessage}
-          options={filteredOptions}
-          multipleValue={field.multiple}
-        />
-      );
-    } else if (isAddressField(field.id)) {
+  const renderField = (field) => {
+    if (isAddressField(field.id)) {
       return (
         <React.Fragment key={field.id}>
           <GoogleAutocomplete
+            id={field.id}
             className="mt-16"
             label={field.label}
             value={formData[field.id]} // pickUpAddress / dropOffAddress / address
-            onChange={(value) => handleChange(field.id, value, false)}
+            onChange={(value) => {
+              handleChange(field.id, value);
+              setGoogleAdsAddress((prevData) => ({ ...prevData, [field.id]: {} }));
+            }}
             onSelect={(selectedAddress) => {
               // When user selects an address from suggestions
               setFormData((prevData) => ({
@@ -302,15 +247,11 @@ export default function GetQuoteForm({
       return (
         <Input
           lightTheme={true}
-          key={index}
+          key={field.id}
           label={field.label}
           type={field.type}
           value={formData[field.id]}
-          onChange={
-            field.type === "chip"
-              ? (newValue) => handleChange(field.id, newValue, field.multiple)
-              : (e) => handleChange(field.id, e, field.multiple)
-          }
+          onChange={(event) => handleChange(field.id, event)}
           onBlur={
             field.required ? () => handleBlur(field.id, field.validation) : null
           }
@@ -327,13 +268,17 @@ export default function GetQuoteForm({
         />
       );
     }
-  });
+  };
+  const nameFields = getQuoteFormData.filter((field) => ["firstname", "lastname"].includes(field.id));
+  const formInputs = getQuoteFormData.filter((field) => !["firstname", "lastname"].includes(field.id)).map(renderField);
 
   return (
     <>
       <Container
-        variant="div"
-        className={`${className} ${styles.container}`}
+        component="form"
+        onSubmit={submitHandler}
+        noValidate
+        className={`${className || ""} ${styles.container} ${variant === "hero" ? styles.hero : ""}`}
         maxWidth="xl"
       >
         <Box sx={{ width: "100%" }}>
@@ -349,38 +294,46 @@ export default function GetQuoteForm({
                 </Typography>
               )}
 
+              <div className={styles.nameRow}>
+                {nameFields.map(renderField)}
+              </div>
               {formInputs}
 
               <Button
                 // newSubmission={newSubmission}
-                onClick={submitHandler}
+                type="submit"
                 loading={isLoading}
                 // isSuccess={isSuccess}
                 variant="contained"
                 className="mt-16 full-width"
+                endIcon={variant === "hero" ? <ArrowForwardIcon /> : undefined}
               >
-                Get My Free Quote
+                {variant === "hero" ? "Submit" : "Get My Free Quote"}
               </Button>
-              <Button
-                variant="text"
-                className="mt-8  align-center"
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-                href={`tel:${process.env.NEXT_PUBLIC_PHONE_NUMBER}`}
-                startIcon={<LocalPhoneIcon />}
-              >
-                Prefer to talk? {process.env.NEXT_PUBLIC_PHONE_NUMBER}
-              </Button>
-              <Typography
-                variant="body2"
-                component="div"
-                className="center-align"
-              >
-                Honest advice • Free Quote • No obligation
-              </Typography>
+              {!hideFooter && (
+                <>
+                  <Button
+                    variant="text"
+                    className="mt-8 align-center"
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                    href={cleaningPhoneHref}
+                    startIcon={<LocalPhoneIcon />}
+                  >
+                    Prefer to talk? {cleaningPhone}
+                  </Button>
+                  <Typography
+                    variant="body2"
+                    component="div"
+                    className="center-align"
+                  >
+                    Honest advice • Free Quote • No obligation
+                  </Typography>
+                </>
+              )}
 
               {error && (
                 <Alert sx={{ margin: "8px 0" }} severity="error">

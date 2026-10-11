@@ -177,7 +177,7 @@ function DesktopNavbar(props) {
                 <Button
                   size="small"
                   variant="contained"
-                  sx={{ padding: "6px 16px" }}
+                  sx={{ padding: "6px 16px", whiteSpace: "nowrap" }}
                 >
                   Get Your Free Quote
                 </Button>

@@ -121,10 +121,10 @@ export const lightTheme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#4F33FF",
+      main: "#14287b",
     },
     secondary: {
-      main: "#4F33FF",
+      main: "#14287b",
     },
 
     contrastThreshold: 4.5,
@@ -205,7 +205,7 @@ export const lightTheme = createTheme({
         },
         contained: {
           "&:hover": {
-            backgroundColor: "#4026ebff", // slightly darker yellow
+            backgroundColor: "#203b9d",
             transform: "translateY(-1px)",
           },
         },
@@ -213,7 +213,7 @@ export const lightTheme = createTheme({
         outlined: {
           borderRadius: "50px",
           textTransform: "none",
-          border: "1px solid #4F33FF",
+          border: "1px solid #14287b",
           "&:hover": {
             transform: "translateY(-1px)",
           },

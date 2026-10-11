@@ -1,4 +1,8 @@
 export const usefulLinks = [
+  {
+    label: "Carpet Shampoo",
+    url: "/carpet-shampoo-wellington",
+  },
  {
     label: "Move-Out Cleaning",
     url: "/move-out-cleaning-wellington",
@@ -8,19 +12,19 @@ export const usefulLinks = [
     url: "/move-in-cleaning-wellington",
   },
   {
-    id: 2,
+    label: "End-of-Tenancy Cleaning",
+    url: "/end-of-tenancy-cleaning",
+  },
+  {
     label: "Our Services",
     url: "/#our-services",
   },
   {
-    id: 2,
     label: "Our Work",
     url: "/#our-work",
   },
   {
-    id: 2,
     label: "Reviews",
-    url: "/end-of-tenancy-cleaning#testimonials",
+    url: "/#google-reviews",
   },
-  { label: "Contact Us", url: "#footer" },
 ];

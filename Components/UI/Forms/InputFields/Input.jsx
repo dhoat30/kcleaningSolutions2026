@@ -18,7 +18,7 @@ import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import styles from "./Input.module.scss";
 import DateInput from "./DateInput";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -60,6 +60,9 @@ export default function Input({
 }) {
 
     const [open, setOpen] = useState(false);
+    const generatedId = useId();
+    const inputId = id || generatedId;
+    const labelId = `${inputId}-label`;
 
   if (type === "radio") {
     return (
@@ -106,14 +109,15 @@ export default function Input({
      
         fullWidth={true}
       >
-        <InputLabel id="multiple-checkbox-label" sx={{ width: "100%" }}           color={"secondary"}
+        <InputLabel id={labelId} sx={{ width: "100%" }}           color={"secondary"}
 >
           {label}
         </InputLabel>
         <Select
           sx={{ width: "100%" }}
-          labelId="multiple-checkbox-label"
-          id="multiple-checkbox"
+          labelId={labelId}
+          id={inputId}
+          name={id}
           multiple={multipleValue}
           value={value}
           onChange={onChange}
@@ -128,11 +132,11 @@ export default function Input({
         >
           {options.map((option, index) => (
             <MenuItem key={index} value={option.value}>
-              <Checkbox
+              {multipleValue && <Checkbox
                         color={"secondary"}
 
                 checked={value.indexOf(option.value) > -1}
-              />
+              />}
               <ListItemText
                 primary={option.label}
               />
@@ -252,6 +256,7 @@ export default function Input({
               key={index}
               label={option.label}
               onClick={() => handleChipClick(option.value)}
+              aria-pressed={value.includes(option.value)}
               variant={value.includes(option.value) ? "filled" : "outlined"}
               color="secondary"
             />

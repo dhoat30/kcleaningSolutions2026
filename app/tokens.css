@@ -1,8 +1,12 @@
 :root {
   /* Color styles */
+  --brand-blue: #14287b;
+  --brand-blue-hover: #203b9d;
+  --brand-yellow: #fef22e;
+  --brand-yellow-hover: #f2e51d;
   --material-theme--white: rgba(255, 255, 255, 1);
   --material-theme--black: rgba(0, 0, 0, 1);
-  --light-primary:#08218d;
+  --light-primary: var(--brand-blue);
   --light-on-primary: rgba(255, 255, 255, 1);
   --light-primary-container: rgba(227, 223, 255, 1);
   --light-on-primary-container: rgba(19, 0, 103, 1);

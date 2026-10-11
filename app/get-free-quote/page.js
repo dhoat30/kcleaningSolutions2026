@@ -1,17 +1,9 @@
 export const revalidate = 2592000; // applies to both page and metadata
 
 import Header from "@/Components/UI/Header/Header";
-import {
-  getSinglePostData,
-  getGoogleReviews,
-  getOptions,
-} from "@/utils/fetchData";
+import { getSinglePostData } from "@/utils/fetchData";
 import Footer from "@/Components/UI/Footer/Footer";
-import Layout from "@/Components/UI/Layout/Layout";
-
-import GoogleReviewsCarousel from "@/Components/UI/GoogleReviews/GoogleReviewsCarousel";
-import GetQuoteForm from "@/Components/UI/Forms/GetQuoteForm";
-import BreadcrumbHero from "@/Components/UI/Hero/BreadcrumbHero";
+import FormSection from "@/Components/UI/Layout/Sections/FormSection/FormSection";
 export async function generateMetadata(props, parent) {
   // optionally access and extend (rather than replace) parent metadata
 
@@ -29,18 +21,23 @@ export async function generateMetadata(props, parent) {
 }
 
 export default async function Home() {
+  const data = await getSinglePostData(
+    "k-cleaning-solution",
+    "/wp-json/wp/v2/cleaning-business",
+  );
+  const hero = data?.[0]?.acf?.layout?.[0];
   return (
     <>
       <Header />
       <main>
-        <BreadcrumbHero title="Get Your Free Quote" />
-
-        {/* <USP showTitle={true} statsArray={options.stats.items} cards={options.usp.items} title={options.usp.section_title} description={options.usp.section_description} /> */}
-        <section className="container max-width-sm mt-32 mb-32">
-          <GetQuoteForm hideTitle={true} />
-        </section>
+        <FormSection
+          title="Get Your <strong>Free Quote</strong>"
+          description="Tell us about your property and the cleaning you need. Our local Wellington team will help you find the right service for your home or business."
+          usp={{ text_usp: hero?.text_usp }}
+          graphic={hero?.graphic}
+        />
       </main>
-      <Footer />
+      <Footer showFooterCta={false} />
     </>
   );
 }

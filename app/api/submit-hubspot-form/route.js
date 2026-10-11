@@ -40,14 +40,18 @@ export async function POST(req, res) {
 
     try {
         // submit form
-        let response = await fetch(`https://api.hsforms.com/submissions/v3/integration/secure/submit/${HUBSPOT_PORTAL_ID}/${hubspotFormID}`, postOptions)
-        response = await response.json();
+        const response = await fetch(`https://api.hsforms.com/submissions/v3/integration/secure/submit/${HUBSPOT_PORTAL_ID}/${hubspotFormID}`, postOptions);
+        const data = await response.json();
 
-        return NextResponse.json({ message: "This Worked", success: true, data: response });
+        if (!response.ok) {
+            return NextResponse.json({ message: "Form submission failed", success: false, data }, { status: response.status });
+        }
+
+        return NextResponse.json({ message: "This Worked", success: true, data });
     } catch (error) {
         console.error(error);
         // const err = await error.json();
-        return NextResponse.json({ message: error, success: false });
+        return NextResponse.json({ message: "Form submission failed", success: false }, { status: 500 });
         // res.status(500).send('Error sending email');
 
     }

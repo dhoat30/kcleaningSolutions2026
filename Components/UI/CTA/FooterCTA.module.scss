@@ -1,53 +1,69 @@
-.section{ 
-  padding: 40px 0;
-  @media (max-width: 900px) {
-    padding: 24px 0;
-  }
-  .wrapper{ 
-    padding: 160px 0;
- background: rgb(85, 24, 167);
-    background: radial-gradient(
-      circle,
-      rgba(85, 24, 167, 1) 0%,
-      rgba(139, 49, 198, 1) 100%
-    );
-
-        border-radius: 32px;
-        @media (max-width: 900px) {
-          padding: 56px 16px;
-        }
-
-        .contentWrapper{ 
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-  }
-  .sealWrapper{ 
-
-  }
+.section { padding: 56px 0; }
+.lightBackground { background: #fff; }
+.container { width: min(100% - 96px, 1440px); margin: 0 auto; }
+.wrapper {
+  padding: 88px 48px;
+  overflow: hidden;
+  border-radius: 28px;
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(254, 242, 46, 0.3) 0%, transparent 48%),
+    radial-gradient(ellipse at 0% 100%, rgba(254, 242, 46, 0.12) 0%, transparent 42%),
+    linear-gradient(120deg, #101f5a 0%, var(--brand-blue) 55%, var(--brand-blue-hover) 100%);
+  color: #fff;
+  text-align: center;
 }
-
-
-.badgeRow {
-  margin-bottom: 1rem;
+.contentWrapper { max-width: 900px; margin: 0 auto; }
+.seal { display: block; margin: 0 auto 24px; object-fit: contain; }
+.eyebrow { margin-bottom: 20px; color: var(--brand-yellow); font-size: 0.8rem; font-weight: 800; letter-spacing: 0.12em; line-height: 1.6; text-transform: uppercase; }
+.contentWrapper h2 {
+  font-family: var(--font-manrope), sans-serif;
+  font-size: clamp(2.25rem, 3.5vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+  text-wrap: balance;
 }
-
-.badge {
+.description { max-width: 720px; margin: 24px auto 0; color: #edf0ff; font-size: 1.1rem; line-height: 1.75; }
+.actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-top: 32px; }
+.cta {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.45rem 0.85rem;
+  justify-content: center;
+  gap: 20px;
+  padding: 18px 28px;
+  border: 1px solid var(--brand-yellow);
   border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 650;
-  letter-spacing: 0.02em;
-
-  color: #f9f871;
-  background: rgba(65, 18, 254, 0.14);
-  border: 1px solid rgba(249, 248, 113, 0.35);
+  background: var(--brand-yellow);
+  color: var(--brand-blue);
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.4;
+  svg { width: 22px; height: 22px; }
+  &:hover { background: var(--brand-yellow-hover); border-color: var(--brand-yellow-hover); }
+  &:focus-visible { outline: 2px solid #fff; outline-offset: 5px; }
 }
+.secondaryCta {
+  border-color: #aebce8;
+  background: transparent;
+  color: #fff;
+  &:hover { background: rgba(255, 255, 255, 0.1); border-color: #fff; }
+}
+.reassurance { margin-top: 18px; color: #dce3ff; font-size: 0.85rem; line-height: 1.6; }
 
-.badgeIcon {
-  font-size: 0.95rem;
-  line-height: 1;
+@media (max-width: 1200px) { .container { width: calc(100% - 64px); } }
+@media (max-width: 1000px) {
+  .section { padding: 40px 0; }
+  .container { width: min(100% - 48px, 720px); }
+  .wrapper { padding: 64px 32px; }
+}
+@media (max-width: 600px) {
+  .section { padding: 32px 0; }
+  .container { width: calc(100% - 32px); }
+  .wrapper { padding: 48px 24px; border-radius: 20px; }
+  .eyebrow { font-size: 0.7rem; letter-spacing: 0.08em; margin-bottom: 18px; }
+  .contentWrapper h2 { font-size: 2.1rem; }
+  .description { margin-top: 20px; font-size: 0.95rem; }
+  .actions { margin-top: 28px; }
+  .cta { width: 100%; padding: 16px 20px; gap: 12px; font-size: 0.9rem; }
+  .reassurance { font-size: 0.8rem; }
 }
