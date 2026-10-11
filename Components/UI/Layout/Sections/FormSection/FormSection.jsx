@@ -181,10 +181,6 @@ export default function FormSection({
           </div>
         </div>
       </div>
-      <div className={styles.mobileCtaBar}>
-        <a className={styles.quoteButton} href="#quote-form">Get my free quote <ArrowForwardIcon aria-hidden="true" /></a>
-        <a className={styles.mobileCallButton} href={cleaningPhoneHref}><LocalPhoneIcon aria-hidden="true" />Call</a>
-      </div>
     </section>
   );
 }

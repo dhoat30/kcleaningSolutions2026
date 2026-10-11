@@ -95,16 +95,28 @@
   a:hover { color: var(--brand-yellow); }
 }
 
-// The contact section also uses these styles for its mobile phone shortcut.
+// Contact details are also used by the contact section.
 .contactContainer { min-width: 0; }
-.fabPhone {
-  position: fixed !important;
-  bottom: 80px !important;
-  right: 8px;
-  width: 60px !important;
-  height: 60px !important;
-  background: var(--brand-blue) !important;
-  @media (min-width: 900px) { display: none !important; }
+.callFab {
+  position: fixed;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  right: calc(20px + env(safe-area-inset-right, 0px));
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border: 2px solid var(--brand-blue);
+  border-radius: 50%;
+  background: var(--brand-yellow);
+  color: var(--brand-blue);
+  box-shadow: 0 6px 20px rgba(20, 40, 123, 0.24);
+  transition: background 160ms ease;
+
+  svg { width: 26px; height: 26px; }
+  &:hover { background: var(--brand-yellow-hover); }
+  &:focus-visible { outline: 3px solid var(--brand-blue); outline-offset: 4px; }
 }
 
 @media (max-width: 1200px) {

@@ -8,9 +8,6 @@ import PhoneCircleIcon from "../Icons/PhoneCircleIcon";
 import LocationCircleIcon from "../Icons/LocationCircleIcon";
 import Image from "next/image";
 
-import Fab from "@mui/material/Fab";
-import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
-
 import styles from "./Footer.module.scss";
 
 export default function ContactInfo({ contactInfo, className }) {
@@ -39,16 +36,6 @@ export default function ContactInfo({ contactInfo, className }) {
         </Typography>
         {infoComponent}
       </Container>
-      <Fab
-        className={` ${styles.fabPhone}`}
-        href={contactInfo.info[0].url}
-        aria-label="Phone"
-      >
-        <LocalPhoneIcon
-          color="white"
-          sx={{ fontSize: "2rem", color: "white" }}
-        />
-      </Fab>
     </>
   );
 }

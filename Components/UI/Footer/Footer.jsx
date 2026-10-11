@@ -63,6 +63,14 @@ export default function Footer({ footerCtaData, showFooterCta = true }) {
           <Copyright />
         </div>
       </footer>
+      <a
+        href={cleaningPhoneHref}
+        className={styles.callFab}
+        aria-label={`Call K Cleaning Solution on ${cleaningPhone}`}
+        title={`Call ${cleaningPhone}`}
+      >
+        <LocalPhoneOutlinedIcon aria-hidden="true" />
+      </a>
     </>
   );
 }
