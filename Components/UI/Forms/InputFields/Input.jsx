@@ -17,15 +17,10 @@ import Chip from "@mui/material/Chip";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import styles from "./Input.module.scss";
-import DateInput from "./DateInput";
-import { useId, useState } from "react";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import dayjs from "dayjs";
-import IconButton from "@mui/material/IconButton";
-import InputAdornment from "@mui/material/InputAdornment";
-import ClearIcon from "@mui/icons-material/Close";
+import { useId } from "react";
+import dynamic from "next/dynamic";
+
+const DatePickerInput = dynamic(() => import("./DatePickerInput"));
 // styling for select
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -59,7 +54,6 @@ export default function Input({
   ...props
 }) {
 
-    const [open, setOpen] = useState(false);
     const generatedId = useId();
     const inputId = id || generatedId;
     const labelId = `${inputId}-label`;
@@ -269,65 +263,9 @@ export default function Input({
     );
   } 
   else if(type==="datePicker"){
-    return           <FormControl
-      fullWidth
-                color="secondary"
-
-      required={required}
-      error={required ? isInvalid : null}
-      sx={{ marginTop: removeMargin ? "0" : "24px", position: "relative" }}
-    >
-      <LocalizationProvider dateAdapter={AdapterDayjs}           color="secondary"
->
-        <DatePicker
-          label={label}
-          value={value ?? null}
-          onChange={onChange}
-          format="DD/MM/YYYY"
-          minDate={dayjs()}
-          open={open}
-          onOpen={() => setOpen(true)}
-          onClose={() => setOpen(false)}
-          color="secondary"
-          slotProps={{
-            textField: {
-              color: "secondary",
-              variant: "outlined",
-              fullWidth: true,
-              helperText: isInvalid ? errorMessage : "",
-              error: isInvalid,
-              inputProps: { readOnly: true },
-              onClick: () => setOpen(true),
-              onKeyDown: (e) => {
-                if (e.key === "Enter" || e.key === " ") setOpen(true);
-              },
-            },
-          }}
-        />
-      </LocalizationProvider>
-
-      {value ? (
-        <IconButton
-          aria-label="Clear date"
-          size="small"
-          onClick={(e) => {
-            e.stopPropagation();
-            onChange(null);
-          }}
-          color={"secondary"}
-          sx={{
-            position: "absolute",
-            right: 44,         // leave space for the calendar icon (~48px)
-            top: "50%",
-            transform: "translateY(-50%)",
-            zIndex: 1,
-          }}
-        >
-          <ClearIcon fontSize="small" color={"secondary"}
-/>
-        </IconButton>
-      ) : null}
-    </FormControl>
+    return <DatePickerInput label={label} value={value} onChange={onChange}
+      required={required} isInvalid={isInvalid} errorMessage={errorMessage}
+      removeMargin={removeMargin} />;
   } 
   else if (
     type === "text" ||

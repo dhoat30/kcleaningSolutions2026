@@ -103,6 +103,7 @@ export default function FormSection({
         videoID={graphic.youtube_video.youtube_id}
         placeholderImage={graphic.youtube_video.placeholder_image}
         showCompressedImage
+        sizes="(max-width: 600px) calc(100vw - 32px), (max-width: 1000px) 720px, (max-width: 1200px) 50vw, (max-width: 1536px) 52vw, 760px"
         priority
       />
     );

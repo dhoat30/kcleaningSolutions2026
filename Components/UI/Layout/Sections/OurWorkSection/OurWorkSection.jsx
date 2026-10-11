@@ -8,6 +8,14 @@ export default function OurWorkSection({
   description,
   beforeAfterGalleryArr,
 }) {
+  const imageData = (image) => image && ({
+    url: image.url, alt: image.alt, width: image.width, height: image.height,
+  });
+  const galleryData = beforeAfterGalleryArr?.map((item) => ({
+    tag: item.tag,
+    before_image: imageData(item.before_image),
+    after_image: imageData(item.after_image),
+  }));
   return (
     <section id="our-work" className={`${styles.section} mt-16`}>
       <Container maxWidth="xl">
@@ -31,7 +39,7 @@ export default function OurWorkSection({
         </Container>
         <div className="gallery-wrapper">
           <Gallery
-            galleryData={beforeAfterGalleryArr}
+            galleryData={galleryData}
             showBriefGallery={true}
           />
         </div>

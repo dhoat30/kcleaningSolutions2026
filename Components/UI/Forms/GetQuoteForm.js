@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import Input from "./InputFields/Input";
+import TextField from "@mui/material/TextField";
 import { getQuoteFormData } from "@/utils/getQuoteFormData";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -36,6 +36,7 @@ export default function GetQuoteForm({
     message: "",
   });
   const [errors, setErrors] = useState({});
+  const [mapsRequested, setMapsRequested] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState(false);
@@ -214,6 +215,7 @@ export default function GetQuoteForm({
         <React.Fragment key={field.id}>
           <GoogleAutocomplete
             id={field.id}
+            loadMaps={mapsRequested}
             className="mt-16"
             label={field.label}
             value={formData[field.id]} // pickUpAddress / dropOffAddress / address
@@ -245,11 +247,11 @@ export default function GetQuoteForm({
       );
     } else {
       return (
-        <Input
-          lightTheme={true}
+        <TextField
           key={field.id}
+          sx={{ marginTop: "16px" }}
           label={field.label}
-          type={field.type}
+          type={field.type === "textarea" ? "text" : field.type}
           value={formData[field.id]}
           onChange={(event) => handleChange(field.id, event)}
           onBlur={
@@ -257,13 +259,14 @@ export default function GetQuoteForm({
           }
           required={field.required}
           autoComplete={field.autoComplete}
-          isInvalid={errors[field.id]}
-          errorMessage={field.errorMessage}
-          options={field.options}
-          multipleValue={field.multiple}
-          min={field.range && field.range.min}
-          max={field.range && field.range.max}
-          note={field.note && field.note}
+          error={!!errors[field.id]}
+          helperText={errors[field.id] ? field.errorMessage : undefined}
+          color="secondary"
+          variant="outlined"
+          fullWidth
+          multiline={field.type === "textarea"}
+          minRows={field.type === "textarea" ? 3 : undefined}
+          name={field.id}
           id={field.id}
         />
       );
@@ -277,6 +280,7 @@ export default function GetQuoteForm({
       <Container
         component="form"
         onSubmit={submitHandler}
+        onFocusCapture={() => setMapsRequested(true)}
         noValidate
         className={`${className || ""} ${styles.container} ${variant === "hero" ? styles.hero : ""}`}
         maxWidth="xl"

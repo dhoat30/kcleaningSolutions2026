@@ -30,6 +30,7 @@ export default function BeforeAfterMasonry({ data, showTitle, priority }) {
                   alt={data.beforeImage.alt ? data.beforeImage.alt : "Before"}
                   priority={priority}
                   fill
+                  sizes="(max-width: 600px) calc(100vw - 32px), (max-width: 900px) 50vw, 33vw"
                 />
                 <CompareLabel position="right">Before</CompareLabel>
               </>
@@ -40,6 +41,7 @@ export default function BeforeAfterMasonry({ data, showTitle, priority }) {
                   src={data.afterImage.url}
                   alt={data.afterImage.alt ? data.afterImage.alt : "After"}
                   fill
+                  sizes="(max-width: 600px) calc(100vw - 32px), (max-width: 900px) 50vw, 33vw"
                   priority={priority}
                 />
                 <CompareLabel position="left">After</CompareLabel>
@@ -51,7 +53,7 @@ export default function BeforeAfterMasonry({ data, showTitle, priority }) {
             }%`,
           
           }}>
-            <Image src={data.beforeImage.url} alt={data.beforeImage.alt ? data.beforeImage.alt : "Before"} fill />
+            <Image src={data.beforeImage.url} alt={data.beforeImage.alt ? data.beforeImage.alt : "Before"} fill sizes="(max-width: 600px) calc(100vw - 32px), (max-width: 900px) 50vw, 33vw" />
           </div>
       }
 

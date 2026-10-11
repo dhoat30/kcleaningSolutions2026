@@ -49,7 +49,6 @@ export default function Gallery({ galleryData, showBriefGallery = false }) {
         {filteredGalleryData.map((item, index) => (
           <div key={index} className={`${styles.imageContainer}`}>
             <BeforeAfterMasonry
-              priority={index === 0}
               showTitle={false}
               data={{
                 beforeImage: item.before_image,

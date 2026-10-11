@@ -6,9 +6,7 @@ import RegularProcess from "./Sections/Process/RegularProcess";
 import USP from "../USP/USP";
 import Stats from "../Stats/Stats";
 import LocationsCovered from "../LocationsCovered/LocationsCovered";
-import HoursCalculator from "./Sections/HoursCalculator/HoursCalculator";
-import ContactSection from "./Sections/ContactSection/ContactSection";
-import SpaceCalculator from "./Sections/SpaceCalculator/SpaceCalculator";
+import { HoursCalculator, SpaceCalculator, ContactSection, PriceSliderSection } from "./OptionalSections";
 import FooterCta from "../CTA/FooterCta";
 import GoogleReviewsCarousel from "../GoogleReviews/GoogleReviewsCarousel";
 import UspTable from "./Sections/UspTable/UspTable";
@@ -16,11 +14,11 @@ import VerticalTabs from "./Sections/VerticalTabs/VerticalTabs";
 import CardsSection from "./Sections/CardsSection/CardsSection";
 import OurWorkSection from "./Sections/OurWorkSection/OurWorkSection";
 import RowCardTabs from "./Sections/RowCardTabs/RowCardTabs";
-import PriceSliderSection from "./Sections/PriceSliderSection/PriceSliderSection";
 import EmpathySection from "./Sections/EmpathySection/EmpathySection";
 import SolutionSection from "./Sections/SolutionSection/SolutionSection";
 import TestimonialSection from "./Sections/TestimonialSection/TestimonialSection";
 import ServicePackagesSection from "./Sections/ServicePackagesSection/ServicePackagesSection";
+
 export default function Layout({
   uspTable,
   sections,
@@ -38,7 +36,6 @@ export default function Layout({
   adsPackagesData,
 }) {
   if (!sections) return null;
-  console.log(sections);
   const isServicesSection = (section) =>
     ["tabs_section", "services"].includes(section.acf_fc_layout) ||
     (section.acf_fc_layout === "show_services" && section.show_services);

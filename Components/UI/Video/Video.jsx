@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from "react"; 
+import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import PlayIcon from "../Icons/PlayIcon";
@@ -17,7 +17,8 @@ export default function Video({
   placeholderImage,
   className,
   showCompressedImage,
-  priority=false
+  priority=false,
+  sizes="(max-width: 1200px) 100vw, 80vw"
 }) {
   const imageURL = showCompressedImage
     ? placeholderImage?.sizes?.large
@@ -47,7 +48,7 @@ export default function Video({
                 borderRadius: "12px"
                 // cover, contain, none
               }}
-              sizes="(max-width: 1200px) 100vw, 80vw"
+              sizes={sizes}
               priority={priority}
 
             />

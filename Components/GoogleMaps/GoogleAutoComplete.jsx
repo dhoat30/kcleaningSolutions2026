@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import GoogleMapsLoader from "./GoogleMapsLoader";
@@ -17,10 +17,12 @@ export default function GoogleAutocomplete({
   className,
   autoComplete,
   inputTitle,
+  loadMaps = false,
 }) {
   const generatedId = useId();
   const inputRef = useRef(null);
   const onSelectRef = useRef(onSelect);
+  const [mapsRequested, setMapsRequested] = useState(false);
 
   useEffect(() => {
     onSelectRef.current = onSelect;
@@ -59,6 +61,12 @@ export default function GoogleAutocomplete({
           },
         });
       });
+
+      // A visitor may paste an address before the on-demand script finishes.
+      // Ask the widget to process that existing text once it is attached.
+      if (document.activeElement === inputRef.current && inputRef.current.value) {
+        inputRef.current.dispatchEvent(new Event("input", { bubbles: true }));
+      }
     };
 
     window.addEventListener("gmaps-ready", init);
@@ -73,7 +81,7 @@ export default function GoogleAutocomplete({
 
   return (
     <>
-      <GoogleMapsLoader />
+      {(loadMaps || mapsRequested) && <GoogleMapsLoader />}
       {inputTitle && <Typography variant="h6" component="h2" className="mt-24">{inputTitle}</Typography>}
       <TextField
         id={id || generatedId}
@@ -81,7 +89,11 @@ export default function GoogleAutocomplete({
         className={className}
         label={label}
         value={value}
-        onChange={(event) => onChange(event.target.value)}
+        onFocus={() => setMapsRequested(true)}
+        onChange={(event) => {
+          setMapsRequested(true);
+          onChange(event.target.value);
+        }}
         onKeyDown={(event) => {
           if (event.key === "Enter") {
             event.preventDefault();
