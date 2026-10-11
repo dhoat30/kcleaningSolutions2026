@@ -71,7 +71,7 @@ export const headerLinks = [
   {
     id: 2,
     label: "Reviews",
-    url: "/end-of-tenancy-cleaning#testimonials",
+    url: "/#google-reviews",
   },
   { label: "Contact Us", url: "#footer" },
 ];
